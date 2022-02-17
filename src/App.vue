@@ -5,11 +5,11 @@
     <div class="cart-content">
       <div class="cart-content__product">
         <img src="" alt="" />
-        <span>Producto - $ 500.000</span>
+        <span>{{product.name}} - $ {{ new Intl.NumberFormat("es-CO").format(product.price)}}</span>
       </div>
       <div class="cart-content__product">
         <img src="" alt="" />
-        <span>Producto - $ 500.000</span>
+        <span>{{product.name}} - $ {{ new Intl.NumberFormat("es-CO").format(product.price)}}</span>
       </div>
     </div>
   </header>
@@ -24,7 +24,7 @@
       </div>
     </section>
     <section class="description">
-      <h4>Producto</h4>
+      <h4>{{product.name}}{{product.stock == 0? '😒' : '😊'}}</h4>
       <span class="badge new">Nuevo</span>
       <span class="badge offer">Oferta</span>
       <p class="description__status"></p>
@@ -50,5 +50,25 @@ export default defineComponent({
   name: "App",
   components: {
   },
+  data(){
+    return {
+      product:{
+        name:"camara",
+        price: 450000,
+        stock : 0,
+        content : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
+        images:[
+          {
+            image: "@/assets/images/camera.jpg",
+            thumbnail:"@/assets/images/camera-thumb.jpg"
+          },
+          {
+            image: "@/assets/images/camera-2.jpg",
+            thumbnail:"@/assets/images/camera-2-thumb.jpg"
+          }
+        ]
+      }
+    }
+  }
 });
 </script>
