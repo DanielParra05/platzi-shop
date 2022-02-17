@@ -1,8 +1,8 @@
 <template>
   <header>
     <h3>PlatziCommerce</h3>
-    <button class="cart">Carro (0)</button>
-    <div class="cart-content">
+    <button class="cart" >Carro (0)</button>
+    <div class="cart-content" v-show="cartOpen">
       <div class="cart-content__product">
         <img :src="product.images[0].image" :alt="product.name" />
         <span
@@ -43,9 +43,11 @@
     </section>
     <section class="description">
       <h4>{{ product.name }}{{ product.stock == 0 ? "😒" : "😊" }}</h4>
-      <span class="badge new">Nuevo</span>
-      <span class="badge offer">Oferta</span>
-      <p class="description__status"></p>
+      <span class="badge new" v-if="product.new">Nuevo</span>
+      <span class="badge offer" v-if="product.offer">Oferta</span>
+      <p class="description__status" v-if="product.stock == 3"> Quedan pocas unidades </p>
+      <p class="description__status" v-else-if="product.stock == 2"> Producto esta por terminarse </p>
+      <p class="description__status" v-else> Ulitma unidad disponible</p>
       <p class="description__price">$ 500.000</p>
       <p class="description__content">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atque
@@ -56,7 +58,7 @@
         <span>Codigo de Descuent:</span>
         <input type="text" placeholder="Ingresa tu codigo" />
       </div>
-      <button>Agregar al carrito</button>
+      <button :disabled="product.stock == 0">Agregar al carrito</button>
     </section>
   </main>
 </template>
@@ -70,6 +72,7 @@ export default defineComponent({
   data() {
     return {
       activeImages: 0,
+      cartOpen : false,
       product: {
         name: "camara",
         price: 450000,
@@ -86,6 +89,8 @@ export default defineComponent({
             thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
           },
         ],
+        new : false,
+        offer:true
       },
     };
   },
