@@ -1,20 +1,18 @@
 <template>
   <header>
     <h3>PlatziCommerce</h3>
-    <button class="cart" >Carro (0)</button>
+    <button class="cart">Carro (0)</button>
     <div class="cart-content" v-show="cartOpen">
-      <div class="cart-content__product">
-        <img :src="product.images[0].image" :alt="product.name" />
+      <div
+        class="cart-content__product"
+        :class="{'bg-gray': index & 1}"
+        v-for="(carItem, index) in cart"
+        :key="carItem.name"
+      >
+        <img :src="carItem.images[0].image" :alt="carItem.name" />
         <span
-          >{{ product.name }} - $
-          {{ new Intl.NumberFormat("es-CO").format(product.price) }}</span
-        >
-      </div>
-      <div class="cart-content__product">
-        <img :src="product.images[1].image" :alt="product.name" />
-        <span
-          >{{ product.name }} - $
-          {{ new Intl.NumberFormat("es-CO").format(product.price) }}</span
+          >{{ carItem.name }} - $
+          {{ new Intl.NumberFormat("es-CO").format(carItem.price) }}</span
         >
       </div>
     </div>
@@ -23,17 +21,12 @@
     <section class="product">
       <div class="product__thumbnails">
         <div
+          v-for="(image, index) in product.images" 
+          :key="image.thumbnail"
           class="thumb"
-          :class="{ active: activeImages == 0 }"
+          :class="{ active: activeImages == index }"
           :style="{
-            backgroundImage: 'url(' + product.images[0].thumbnail + ')',
-          }"
-        ></div>
-        <div
-          class="thumb"
-          :class="{ active: activeImages == 1 }"
-          :style="{
-            backgroundImage: 'url(' + product.images[1].thumbnail + ')',
+            backgroundImage: 'url(' + product.images[index].thumbnail + ')',
           }"
         ></div>
       </div>
@@ -45,9 +38,13 @@
       <h4>{{ product.name }}{{ product.stock == 0 ? "😒" : "😊" }}</h4>
       <span class="badge new" v-if="product.new">Nuevo</span>
       <span class="badge offer" v-if="product.offer">Oferta</span>
-      <p class="description__status" v-if="product.stock == 3"> Quedan pocas unidades </p>
-      <p class="description__status" v-else-if="product.stock == 2"> Producto esta por terminarse </p>
-      <p class="description__status" v-else> Ulitma unidad disponible</p>
+      <p class="description__status" v-if="product.stock == 3">
+        Quedan pocas unidades
+      </p>
+      <p class="description__status" v-else-if="product.stock == 2">
+        Producto esta por terminarse
+      </p>
+      <p class="description__status" v-else>Ulitma unidad disponible</p>
       <p class="description__price">$ 500.000</p>
       <p class="description__content">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atque
@@ -72,7 +69,66 @@ export default defineComponent({
   data() {
     return {
       activeImages: 0,
-      cartOpen : false,
+      cartOpen: true,
+      cart: [
+        {
+          name: "Camara",
+          price: 35000,
+          stock: 0,
+          content:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
+          images: [
+            {
+              image: require("@/assets/images/camara.jpg"),
+              thumbnail: require("@/assets/images/camara-thumb.jpg"),
+            },
+            {
+              image: require("@/assets/images/camara-2.jpg"),
+              thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
+            },
+          ],
+          new: false,
+          offer: true,
+        },
+        {
+          name: "CamaraPL",
+          price: 65000,
+          stock: 0,
+          content:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
+          images: [
+            {
+              image: require("@/assets/images/camara.jpg"),
+              thumbnail: require("@/assets/images/camara-thumb.jpg"),
+            },
+            {
+              image: require("@/assets/images/camara-2.jpg"),
+              thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
+            },
+          ],
+          new: false,
+          offer: true,
+        },
+        {
+          name: "CamaraPL2",
+          price: 3000,
+          stock: 0,
+          content:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
+          images: [
+            {
+              image: require("@/assets/images/camara.jpg"),
+              thumbnail: require("@/assets/images/camara-thumb.jpg"),
+            },
+            {
+              image: require("@/assets/images/camara-2.jpg"),
+              thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
+            },
+          ],
+          new: false,
+          offer: true,
+        },
+      ],
       product: {
         name: "camara",
         price: 450000,
@@ -89,8 +145,8 @@ export default defineComponent({
             thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
           },
         ],
-        new : false,
-        offer:true
+        new: false,
+        offer: true,
       },
     };
   },
