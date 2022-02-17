@@ -4,27 +4,45 @@
     <button class="cart">Carro (0)</button>
     <div class="cart-content">
       <div class="cart-content__product">
-        <img src="" alt="" />
-        <span>{{product.name}} - $ {{ new Intl.NumberFormat("es-CO").format(product.price)}}</span>
+        <img :src="product.images[0].image" :alt="product.name" />
+        <span
+          >{{ product.name }} - $
+          {{ new Intl.NumberFormat("es-CO").format(product.price) }}</span
+        >
       </div>
       <div class="cart-content__product">
-        <img src="" alt="" />
-        <span>{{product.name}} - $ {{ new Intl.NumberFormat("es-CO").format(product.price)}}</span>
+        <img :src="product.images[1].image" :alt="product.name" />
+        <span
+          >{{ product.name }} - $
+          {{ new Intl.NumberFormat("es-CO").format(product.price) }}</span
+        >
       </div>
     </div>
   </header>
   <main>
     <section class="product">
       <div class="product__thumbnails">
-        <div class="thumb active"></div>
-        <div class="thumb"></div>
+        <div
+          class="thumb"
+          :class="{ active: activeImages == 0 }"
+          :style="{
+            backgroundImage: 'url(' + product.images[0].thumbnail + ')',
+          }"
+        ></div>
+        <div
+          class="thumb"
+          :class="{ active: activeImages == 1 }"
+          :style="{
+            backgroundImage: 'url(' + product.images[1].thumbnail + ')',
+          }"
+        ></div>
       </div>
       <div class="product__image">
         <img src="" alt="" />
       </div>
     </section>
     <section class="description">
-      <h4>{{product.name}}{{product.stock == 0? '😒' : '😊'}}</h4>
+      <h4>{{ product.name }}{{ product.stock == 0 ? "😒" : "😊" }}</h4>
       <span class="badge new">Nuevo</span>
       <span class="badge offer">Oferta</span>
       <p class="description__status"></p>
@@ -48,27 +66,28 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "App",
-  components: {
-  },
-  data(){
+  components: {},
+  data() {
     return {
-      product:{
-        name:"camara",
+      activeImages: 0,
+      product: {
+        name: "camara",
         price: 450000,
-        stock : 0,
-        content : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
-        images:[
+        stock: 0,
+        content:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
+        images: [
           {
-            image: "@/assets/images/camera.jpg",
-            thumbnail:"@/assets/images/camera-thumb.jpg"
+            image: require("@/assets/images/camara.jpg"),
+            thumbnail: require("@/assets/images/camara-thumb.jpg"),
           },
           {
-            image: "@/assets/images/camera-2.jpg",
-            thumbnail:"@/assets/images/camera-2-thumb.jpg"
-          }
-        ]
-      }
-    }
-  }
+            image: require("@/assets/images/camara-2.jpg"),
+            thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
+          },
+        ],
+      },
+    };
+  },
 });
 </script>
