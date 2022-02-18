@@ -78,67 +78,69 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, reactive, toRefs } from "vue";
 
 export default defineComponent({
   setup() {
-    const product = ref({
-      name: "camara",
-      price: 450000,
-      stock: 5,
-      content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
-      images: [
-        {
-          image: require("@/assets/images/camara.jpg"),
-          thumbnail: require("@/assets/images/camara-thumb.jpg"),
-        },
-        {
-          image: require("@/assets/images/camara-2.jpg"),
-          thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
-        },
-      ],
-      new: false,
-      offer: true,
-      quantity: 1,
+    const productSate = reactive({
+      product: {
+        name: "camara",
+        price: 450000,
+        stock: 5,
+        content:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
+        images: [
+          {
+            image: require("@/assets/images/camara.jpg"),
+            thumbnail: require("@/assets/images/camara-thumb.jpg"),
+          },
+          {
+            image: require("@/assets/images/camara-2.jpg"),
+            thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
+          },
+        ],
+        new: false,
+        offer: true,
+        quantity: 1,
+      },
+      activeImage: 0,
     });
-    const activeImage = ref(0);
-    const cartOpen = ref(false);
-    const cart = ref(new Array<any>());
+
+    const cartState = reactive({
+      cartOpen: false,
+      cart: new Array<any>(),
+    });
 
     const discountCodes = ref(["PLATZI20", "DANIEL"]);
-
     function applyDiscount(event: Event) {
       var discountCodeIndex: number = discountCodes.value.indexOf(
         (event.target as HTMLInputElement).value
       );
       if (discountCodeIndex >= 0) {
-        product.value.price *= 50 / 100;
+        productSate.product.price *= 50 / 100;
         discountCodes.value.splice(discountCodeIndex, 1);
       }
     }
 
     function addToCart() {
-      var proIndex = cart.value.findIndex(
-        (prod) => prod.name == product.value.name
+      var proIndex = cartState.cart.findIndex(
+        (prod) => prod.name == productSate.product.name
       );
       if (proIndex >= 0) {
-        cart.value[proIndex].quantity += 1;
+        cartState.cart[proIndex].quantity += 1;
       } else {
-        cart.value.push(product.value);
+        cartState.cart.push( productSate.product);
       }
-      product.value.stock -= 1;
+       productSate.product.stock -= 1;
     }
 
     setTimeout(() => {
-      activeImage.value = 1;
+      productSate.activeImage = 1;
     }, 2000);
 
     return {
-      product,
-      activeImage,
-      cartOpen,
-      cart,
+      ...toRefs(productSate),
+      ...toRefs(cartState),
 
       applyDiscount,
       addToCart,
