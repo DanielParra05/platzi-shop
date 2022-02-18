@@ -19,8 +19,7 @@
     </section>
     <section class="description">
       <h4>{{ product.name }}{{ product.stock == 0 ? "😒" : "😊" }}</h4>
-      <span class="badge new" v-if="product.new">Nuevo</span>
-      <span class="badge offer" v-if="product.offer">Oferta</span>
+      <badges-component :product="product"></badges-component>
       <p class="description__status" v-if="product.stock == 3">
         Quedan pocas unidades
       </p>
@@ -58,9 +57,11 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, ref } from "vue";
+import BadgesComponent from "@/components/BadgesComponent.vue";
 
 export default defineComponent({
   name: "ProductComponent",
+  components: { BadgesComponent },
   props: {product : {} },
   setup(props) {
     const productSate = reactive({
