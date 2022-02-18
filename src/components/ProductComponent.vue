@@ -61,31 +61,11 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "App",
-  props: {},
+  props: { product:{} },
   data() {
     return {
       activeImage: 0,
-      discountCodes: ["PLATZI20", "DANIEL"],
-      product: {
-        name: "camara",
-        price: 450000,
-        stock: 5,
-        content:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
-        images: [
-          {
-            image: require("@/assets/images/camara.jpg"),
-            thumbnail: require("@/assets/images/camara-thumb.jpg"),
-          },
-          {
-            image: require("@/assets/images/camara-2.jpg"),
-            thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
-          },
-        ],
-        new: false,
-        offer: true,
-        quantity: 1,
-      },
+      discountCodes: ["PLATZI20", "DANIEL"]
     };
   },
   methods : {
@@ -94,8 +74,8 @@ export default defineComponent({
         (event.target as HTMLInputElement).value
       );
       if (discountCodeIndex >= 0) {
-        this.product.price *= 50 / 100;
-        this.discountCodes.splice(discountCodeIndex, 1);
+       // this.product.price *= 50 / 100;
+      //  this.discountCodes.splice(discountCodeIndex, 1);
       }
     },
     

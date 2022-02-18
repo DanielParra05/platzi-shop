@@ -20,9 +20,7 @@
       </div>
     </div>
   </header>
- <product-component></product-component>
- <product-component></product-component>
- <product-component></product-component>
+ <product-component v-for="product in products" :key="product" :product="product"></product-component>
 </template>
 
 <script lang="ts">
@@ -35,7 +33,65 @@ export default defineComponent({
   data() {
     return {
       cartOpen: false,
-      cart: new Array<any>(),      
+      cart: new Array<any>(),  
+      products : [{
+        name: "camara",
+        price: 450000,
+        stock: 5,
+        content:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
+        images: [
+          {
+            image: require("@/assets/images/camara.jpg"),
+            thumbnail: require("@/assets/images/camara-thumb.jpg"),
+          },
+          {
+            image: require("@/assets/images/camara-2.jpg"),
+            thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
+          },
+        ],
+        new: false,
+        offer: true,
+        quantity: 1,
+      },{
+        name: "camara1pl",
+        price: 450000,
+        stock: 5,
+        content:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
+        images: [
+          {
+            image: require("@/assets/images/camara.jpg"),
+            thumbnail: require("@/assets/images/camara-thumb.jpg"),
+          },
+          {
+            image: require("@/assets/images/camara-2.jpg"),
+            thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
+          },
+        ],
+        new: false,
+        offer: true,
+        quantity: 1,
+      },{
+        name: "camara2pl",
+        price: 450000,
+        stock: 5,
+        content:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
+        images: [
+          {
+            image: require("@/assets/images/camara.jpg"),
+            thumbnail: require("@/assets/images/camara-thumb.jpg"),
+          },
+          {
+            image: require("@/assets/images/camara-2.jpg"),
+            thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
+          },
+        ],
+        new: false,
+        offer: true,
+        quantity: 1,
+      }]
     };
   },
   methods: {
