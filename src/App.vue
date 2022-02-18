@@ -1,7 +1,9 @@
 <template>
   <header>
     <h3>PlatziCommerce</h3>
-    <button class="cart" @click="cartOpen = !cartOpen">Carro (0)</button>
+    <button class="cart" @click="cartOpen = !cartOpen">
+      Carro ({{ cart.length }})
+    </button>
     <div class="cart-content" v-show="cartOpen">
       <div
         class="cart-content__product"
@@ -12,7 +14,8 @@
         <img :src="carItem.images[0].image" :alt="carItem.name" />
         <span
           >{{ carItem.name }} - $
-          {{ new Intl.NumberFormat("es-CO").format(carItem.price) }}</span
+          {{ new Intl.NumberFormat("es-CO").format(carItem.price) }}
+          ({{ carItem.quantity }})</span
         >
       </div>
     </div>
@@ -45,9 +48,15 @@
       <p class="description__status" v-else-if="product.stock == 2">
         Producto esta por terminarse
       </p>
-      <p class="description__status" v-else-if="product.stock == 1">Ulitma unidad disponible</p>
-      <p class="description__status" v-else-if="product.stock == 0">Out of stock</p>
-      <p class="description__price">{{ new Intl.NumberFormat("es-CO").format(product.price) }}</p>
+      <p class="description__status" v-else-if="product.stock == 1">
+        Ulitma unidad disponible
+      </p>
+      <p class="description__status" v-else-if="product.stock == 0">
+        Out of stock
+      </p>
+      <p class="description__price">
+        {{ new Intl.NumberFormat("es-CO").format(product.price) }}
+      </p>
       <p class="description__content">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atque
         dolorum corporis, reiciendis eaque temporibus quod magnam amet ea natus
@@ -55,9 +64,15 @@
       </p>
       <div class="discount">
         <span>Codigo de Descuent:</span>
-        <input type="text" placeholder="Ingresa tu codigo" @keyup.enter="product.price *= 50 / 100"/>
+        <input
+          type="text"
+          placeholder="Ingresa tu codigo"
+          @keyup.enter="applyDiscount"
+        />
       </div>
-      <button :disabled="product.stock == 0" @click="product.stock -= 1">Agregar al carrito</button>
+      <button :disabled="product.stock == 0" @click="addToCart">
+        Agregar al carrito
+      </button>
     </section>
   </main>
 </template>
@@ -72,65 +87,8 @@ export default defineComponent({
     return {
       activeImage: 0,
       cartOpen: false,
-      cart: [
-        {
-          name: "Camara",
-          price: 35000,
-          stock: 0,
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
-          images: [
-            {
-              image: require("@/assets/images/camara.jpg"),
-              thumbnail: require("@/assets/images/camara-thumb.jpg"),
-            },
-            {
-              image: require("@/assets/images/camara-2.jpg"),
-              thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
-            },
-          ],
-          new: false,
-          offer: true,
-        },
-        {
-          name: "CamaraPL",
-          price: 65000,
-          stock: 0,
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
-          images: [
-            {
-              image: require("@/assets/images/camara.jpg"),
-              thumbnail: require("@/assets/images/camara-thumb.jpg"),
-            },
-            {
-              image: require("@/assets/images/camara-2.jpg"),
-              thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
-            },
-          ],
-          new: false,
-          offer: true,
-        },
-        {
-          name: "CamaraPL2",
-          price: 3000,
-          stock: 0,
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
-          images: [
-            {
-              image: require("@/assets/images/camara.jpg"),
-              thumbnail: require("@/assets/images/camara-thumb.jpg"),
-            },
-            {
-              image: require("@/assets/images/camara-2.jpg"),
-              thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
-            },
-          ],
-          new: false,
-          offer: true,
-        },
-      ],
+      cart: new Array<any>(),
+      discountCodes: ["PLATZI20", "DANIEL"],
       product: {
         name: "camara",
         price: 450000,
@@ -149,8 +107,32 @@ export default defineComponent({
         ],
         new: false,
         offer: true,
+        quantity: 1,
       },
     };
-  }
+  },
+  methods: {
+    applyDiscount(event: Event) {
+      var discountCodeIndex: number = this.discountCodes.indexOf(
+        (event.target as HTMLInputElement).value
+      );
+      if (discountCodeIndex >= 0) {
+        this.product.price *= 50 / 100;
+        this.discountCodes.splice(discountCodeIndex, 1);
+      }
+    },
+
+    addToCart() {
+      var proIndex = this.cart.findIndex(
+        (prod) => prod.name == this.product.name
+      );
+      if (proIndex >= 0) {
+        this.cart[proIndex].quantity += 1;
+      } else {
+        this.cart.push(this.product);
+      }
+      this.product.stock -= 1;
+    },
+  },
 });
 </script>
