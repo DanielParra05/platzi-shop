@@ -63,76 +63,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 
 export default defineComponent({
-  name: "App",
-  components: {},
-  data() {
-    return {
-      activeImage: 0,
-      cartOpen: false,
-      cart: [
-        {
-          name: "Camara",
-          price: 35000,
-          stock: 0,
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
-          images: [
-            {
-              image: require("@/assets/images/camara.jpg"),
-              thumbnail: require("@/assets/images/camara-thumb.jpg"),
-            },
-            {
-              image: require("@/assets/images/camara-2.jpg"),
-              thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
-            },
-          ],
-          new: false,
-          offer: true,
-        },
-        {
-          name: "CamaraPL",
-          price: 65000,
-          stock: 0,
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
-          images: [
-            {
-              image: require("@/assets/images/camara.jpg"),
-              thumbnail: require("@/assets/images/camara-thumb.jpg"),
-            },
-            {
-              image: require("@/assets/images/camara-2.jpg"),
-              thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
-            },
-          ],
-          new: false,
-          offer: true,
-        },
-        {
-          name: "CamaraPL2",
-          price: 3000,
-          stock: 0,
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
-          images: [
-            {
-              image: require("@/assets/images/camara.jpg"),
-              thumbnail: require("@/assets/images/camara-thumb.jpg"),
-            },
-            {
-              image: require("@/assets/images/camara-2.jpg"),
-              thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
-            },
-          ],
-          new: false,
-          offer: true,
-        },
-      ],
-      product: {
-        name: "camara",
+  setup(){
+    const product = ref({
+      name: "camara",
         price: 450000,
         stock: 5,
         content:
@@ -149,8 +85,21 @@ export default defineComponent({
         ],
         new: false,
         offer: true,
-      },
-    };
+    });
+    const activeImage = ref(0);
+    const cartOpen = ref(false);
+    const cart = ref([]);
+
+    setTimeout(()=>{
+      activeImage.value = 1
+    }, 2000)
+
+    return {
+      product,
+      activeImage,
+      cartOpen,
+      cart
+    }
   }
 });
 </script>
