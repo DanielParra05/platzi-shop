@@ -20,7 +20,13 @@
       </div>
     </div>
   </header>
-  <product-component v-for="product in products" :key="product.name" :product="product"></product-component>
+  <product-component
+    v-for="product in products"
+    :key="product.name"
+    :product="product"
+    @send-to-cart="addToCart"
+    @send-discount="applyDiscount"
+  ></product-component>
 </template>
 
 <script lang="ts">
@@ -98,9 +104,35 @@ export default defineComponent({
       cartOpen: false,
       cart: new Array<any>(),
     });
+
+    function addToCart(product: any) {
+      var proIndex = cartState.cart.findIndex(
+        (prod) => prod.name == product.name
+      );
+      if (proIndex >= 0) {
+        cartState.cart[proIndex].quantity += 1;
+      } else {
+        cartState.cart.push(product);
+      }
+      product.stock -= 1;
+    }
+    const discountCodes = ref(["PLATZI20", "DANIEL"]);
+
+    function applyDiscount(event: Event, product: any){
+        var discountCodeIndex: number = discountCodes.value.indexOf(
+        (event.target as HTMLInputElement).value
+      );
+      if (discountCodeIndex >= 0) {
+         product.price *= 50 / 100;
+         discountCodes.value.splice(discountCodeIndex, 1);
+      }
+    }
+
     return {
       ...toRefs(cartState),
-     ...toRefs( productSate),
+      ...toRefs(productSate),
+      addToCart,
+      applyDiscount
     };
   },
 });

@@ -45,10 +45,10 @@
         <input
           type="text"
           placeholder="Ingresa tu codigo"
-          @keyup.enter="applyDiscount($event)"
+          @keyup.enter="sendDiscount($event)"
         />
       </div>
-      <button :disabled="product.stock == 0" @click="addToCart()">
+      <button :disabled="product.stock == 0" @click="sendToCart">
         Agregar al carrito
       </button>
     </section>
@@ -62,35 +62,20 @@ import BadgesComponent from "@/components/BadgesComponent.vue";
 export default defineComponent({
   name: "ProductComponent",
   components: { BadgesComponent },
-  props: {product : {} },
-  setup(props) {
+  props: { product: {} },
+  emits: ["send-to-cart", "send-discount"],
+  setup(props, { emit }) {
     const productSate = reactive({
-      activeImage: 0
+      activeImage: 0,
     });
 
-    const discountCodes = ref(["PLATZI20", "DANIEL"]);
-    function applyDiscount(event: Event) {
-      var discountCodeIndex: number = discountCodes.value.indexOf(
-        (event.target as HTMLInputElement).value
-      );
-      if (discountCodeIndex >= 0) {
-       // props.product.price *= 50 / 100;
-       // discountCodes.value.splice(discountCodeIndex, 1);
-      }
+    
+    function sendDiscount(event: Event) {
+    emit("send-discount", event, props.product);
     }
-    /** 
-    function addToCart() {
-        var proIndex = cartState.cart.findIndex(
-        (prod) => prod.name == props.product.name
-      );
-      if (proIndex >= 0) {
-        cartState.cart[proIndex].quantity += 1;
-      } else {
-        cartState.cart.push(props.product);
-      }
-      props.product.stock -= 1;
-    }  
-          */
+    function sendToCart() {
+      emit("send-to-cart", props.product);
+    }
 
     setTimeout(() => {
       productSate.activeImage = 1;
@@ -99,7 +84,8 @@ export default defineComponent({
     return {
       ...toRefs(productSate),
 
-     // addToCart,
+      sendToCart,
+      sendDiscount
     };
   },
 });
