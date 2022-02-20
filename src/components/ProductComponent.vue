@@ -46,10 +46,10 @@
         <input
           type="text"
           placeholder="Ingresa tu codigo"
-          @keyup.enter="applyDiscount"
+          @keyup.enter="sendDiscount($event, product)"
         />
       </div>
-      <button :disabled="product.stock == 0" @click="addToCart">
+      <button :disabled="product.stock == 0" @click="sendToCart(product)">
         Agregar al carrito
       </button>
     </section>
@@ -61,38 +61,20 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "App",
-  props: { product:{} },
+  props: { product: {} },
   data() {
     return {
       activeImage: 0,
-      discountCodes: ["PLATZI20", "DANIEL"]
     };
   },
-  methods : {
-    applyDiscount(event: Event) {
-      var discountCodeIndex: number = this.discountCodes.indexOf(
-        (event.target as HTMLInputElement).value
-      );
-      if (discountCodeIndex >= 0) {
-       // this.product.price *= 50 / 100;
-      //  this.discountCodes.splice(discountCodeIndex, 1);
-      }
+  methods: {
+    sendDiscount(event: Event, product: any) {
+      this.$emit("send-discount", event, product);
     },
-    
-      /**
-    addToCart() {
 
-      var proIndex = this.cart.findIndex(
-        (prod) => prod.name == this.product.name
-      );
-      if (proIndex >= 0) {
-        this.cart[proIndex].quantity += 1;
-      } else {
-        this.cart.push(this.product);
-      }
-      this.product.stock -= 1;
-    }
+    sendToCart(product: any) {
+      this.$emit("send-to-cart", product);
+    },
   },
-        */
-  }});
+});
 </script>
