@@ -18,7 +18,7 @@
           ({{ carItem.quantity }})</span
         >
       </div>
-      <p>Total: ${{ new Intl.NumberFormat("es-CO").format(totalPrice) }}</p>
+      <p>Total: ${{ new Intl.NumberFormat("es-CO").format(total) }}</p>
     </div>
   </header>
   <product-component
@@ -107,6 +107,16 @@ export default defineComponent({
       ],
     };
   },
+  computed: {
+    total() {
+      var total: number = this.cart.reduce((prev, curr) => {
+        const prevPrice = prev.price || prev;
+        const prevQuantity = prev.quantity || 1;
+        return prevPrice * prevQuantity + curr.price * curr.quantity;
+      }, 0);
+      return total;
+    },
+  },
   methods: {
     addToCart(product: any) {
       var proIndex = this.cart.findIndex((prod) => prod.name == product.name);
@@ -126,7 +136,7 @@ export default defineComponent({
         this.discountCodes.splice(discountCodeIndex, 1);
       }
     },
-  },
+  }/** ,
   watch: {
     cart: {
       //Watcher de objeto
@@ -139,6 +149,6 @@ export default defineComponent({
       },
       deep: true, //Observar todas las propiedades del arreglo de objetos
     },
-  },
+  },*/
 });
 </script>
