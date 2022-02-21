@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, watch } from "vue";
+import { defineComponent, reactive, toRefs, watch, computed } from "vue";
 import BadgesComponent from "@/components/BadgesComponent.vue";
 
 export default defineComponent({
@@ -67,7 +67,12 @@ export default defineComponent({
   setup(props, { emit }) {
     const productState = reactive({
       activeImage: 0,
-      price_color: "rgb(104,104,209)",
+      //price_color: "rgb(104,104,209)",
+      price_color: computed(() => {
+        return props.product.stock <= 1
+          ? "rgb(188, 30, 67)"
+          : "rgb(104, 104, 209)";
+      }),
     });
 
     function sendDiscount(event: Event) {
@@ -83,7 +88,7 @@ export default defineComponent({
         console.log(val, oldValue);
       }
     );
-
+    /**
     watch(
       () => props.product.stock,
       (stock) => {
@@ -91,7 +96,15 @@ export default defineComponent({
           productState.price_color = "rgb(188, 30, 67)";
         }
       }
-    );
+      );
+
+    const price_color = computed(() => {
+      if (props.product.stock <= 1) {
+        return "rgb(188, 30, 67)";
+      }
+      return "rgb(104, 104, 209)";
+    });
+      */
     return {
       ...toRefs(productState),
 

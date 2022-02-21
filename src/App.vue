@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, toRefs, watch } from "vue";
+import { defineComponent, ref, reactive, toRefs, watch, computed } from "vue";
 import ProductComponent from "@/components/ProductComponent.vue";
 import Product from "@/types/Product";
 
@@ -105,7 +105,15 @@ export default defineComponent({
     const cartState = reactive({
       cartOpen: false,
       cart: new Array<any>(),
-      total: 0,
+      total: computed(() => {
+        var total: number = cartState.cart.reduce((prev, curr) => {
+          const prevPrice = prev.price || prev;
+          const prevQuantity = prev.quantity || 1;
+          return prevPrice * prevQuantity + curr.price * curr.quantity;
+        }, 0);
+
+        return total;
+      }),
     });
 
     function addToCart(product: Product) {
@@ -130,14 +138,15 @@ export default defineComponent({
         discountCodes.value.splice(discountCodeIndex, 1);
       }
     }
-
-    watch(cartState.cart, () => {
-      cartState.total = cartState.cart.reduce((prev, curr) => {
-        const prevPrice = prev.price || prev;
+    /**     
+  watch(cartState.cart, () => {
+    cartState.total = cartState.cart.reduce((prev, curr) => {
+      const prevPrice = prev.price || prev;
         const prevQuantity = prev.quantity || 1;
         return prevPrice * prevQuantity + curr.price * curr.quantity;
       }, 0);
-    });
+    }); 
+  */
 
     return {
       ...toRefs(cartState),
