@@ -33,7 +33,7 @@
       <p class="description__status" v-else-if="product.stock == 0">
         Out of stock
       </p>
-      <p class="description__price">
+      <p class="description__price" :style="{color : price_color}">
         {{ new Intl.NumberFormat("es-CO").format(product.price) }}
       </p>
       <p class="description__content">
@@ -65,6 +65,7 @@ export default defineComponent({
   data() {
     return {
       activeImage: 0,
+      price_color: "rgb(104,104,209)"
     };
   },
   methods: {
@@ -76,5 +77,15 @@ export default defineComponent({
       this.$emit("send-to-cart", product);
     },
   },
+  watch : {
+  //  activeImage(value, oldValue){
+
+   // },
+    "product.stock"(stock){
+      if (stock <= 1){
+        this.price_color = "rgb(188,30,67)"
+      } 
+    }
+  }
 });
 </script>

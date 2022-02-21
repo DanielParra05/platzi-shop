@@ -18,6 +18,7 @@
           ({{ carItem.quantity }})</span
         >
       </div>
+      <p>Total: ${{ new Intl.NumberFormat("es-CO").format(totalPrice) }}</p>
     </div>
   </header>
   <product-component
@@ -41,6 +42,7 @@ export default defineComponent({
       cartOpen: false,
       cart: new Array<any>(),
       discountCodes: ["PLATZI20", "DANIEL"],
+      totalPrice: 0,
       products: [
         {
           name: "camara",
@@ -115,14 +117,27 @@ export default defineComponent({
       }
       product.stock -= 1;
     },
-    addDiscount(event : Event, product: any) {
+    addDiscount(event: Event, product: any) {
       var discountCodeIndex: number = this.discountCodes.indexOf(
         (event.target as HTMLInputElement).value
       );
       if (discountCodeIndex >= 0) {
-       product.price *= 50 / 100;
-       this.discountCodes.splice(discountCodeIndex, 1);
+        product.price *= 50 / 100;
+        this.discountCodes.splice(discountCodeIndex, 1);
       }
+    },
+  },
+  watch: {
+    cart: {
+      //Watcher de objeto
+      handler(cart: Array<any>) {
+        this.totalPrice = cart.reduce((prev, curr) => {
+          const prevPrice = prev.price || prev;
+          const prevQuantity = prev.quantity || 1;
+          return prevPrice * prevQuantity + curr.price * curr.quantity;
+        }, 0);
+      },
+      deep: true, //Observar todas las propiedades del arreglo de objetos
     },
   },
 });
