@@ -43,68 +43,7 @@ export default defineComponent({
       cart: new Array<any>(),
       discountCodes: ["PLATZI20", "DANIEL"],
       totalPrice: 0,
-      products: [
-        {
-          name: "camara",
-          price: 450000,
-          stock: 5,
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
-          images: [
-            {
-              image: require("@/assets/images/camara.jpg"),
-              thumbnail: require("@/assets/images/camara-thumb.jpg"),
-            },
-            {
-              image: require("@/assets/images/camara-2.jpg"),
-              thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
-            },
-          ],
-          new: false,
-          offer: true,
-          quantity: 1,
-        },
-        {
-          name: "camara1pl",
-          price: 450000,
-          stock: 5,
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
-          images: [
-            {
-              image: require("@/assets/images/camara.jpg"),
-              thumbnail: require("@/assets/images/camara-thumb.jpg"),
-            },
-            {
-              image: require("@/assets/images/camara-2.jpg"),
-              thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
-            },
-          ],
-          new: false,
-          offer: true,
-          quantity: 1,
-        },
-        {
-          name: "camara2pl",
-          price: 450000,
-          stock: 5,
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
-          images: [
-            {
-              image: require("@/assets/images/camara.jpg"),
-              thumbnail: require("@/assets/images/camara-thumb.jpg"),
-            },
-            {
-              image: require("@/assets/images/camara-2.jpg"),
-              thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
-            },
-          ],
-          new: false,
-          offer: true,
-          quantity: 1,
-        },
-      ],
+      products: [],
     };
   },
   computed: {
@@ -136,7 +75,18 @@ export default defineComponent({
         this.discountCodes.splice(discountCodeIndex, 1);
       }
     },
-  }/** ,
+  },
+  beforeCreate() {
+    console.log("BeforeCreated");
+  },
+  created() {
+    fetch("https://my-json-server.typicode.com/iosamuel/demo/products").then((res) =>
+      res.json().then((data) => {
+        this.products = data;
+      })
+    );
+  },
+  /** ,
   watch: {
     cart: {
       //Watcher de objeto
