@@ -27,7 +27,8 @@
       type="text"
       id="searchterm"
       placeholder="what are you searching for?"
-      v-model="searchInput"
+      v-model="searchField"
+      @keyup.enter="search"
     />
   </div>
 
@@ -46,19 +47,18 @@ import {
   ref,
   reactive,
   toRefs,
-  watch,
   computed,
   onMounted,
 } from "vue";
 import ProductComponent from "@/components/ProductComponent.vue";
 import Product from "@/types/Product";
-import api from "@/api";
 
 export default defineComponent({
   components: { ProductComponent },
   setup() {
     const productSate = reactive({
       products: [],
+      searchField: "",
     });
 
     const cartState = reactive({
@@ -81,6 +81,19 @@ export default defineComponent({
     fetch("https://my-json-server.typicode.com/iosamuel/demo/products")
       .then((res) => res.json())
       .then((data) => (productSate.products = data));
+
+    function search() {
+      fetch("https://my-json-server.typicode.com/iosamuel/demo/products")
+        .then((res) => res.json())
+        .then((data) => {
+          productSate.products = data.filter(
+            (result: { name: string }) =>
+              result.name.toLowerCase() ==
+                productSate.searchField.toLowerCase() ||
+              "" == productSate.searchField
+          );
+        });
+    }
 
     function addToCart(product: Product) {
       var proIndex = cartState.cart.findIndex(
@@ -119,6 +132,7 @@ export default defineComponent({
       ...toRefs(productSate),
       addToCart,
       applyDiscount,
+      search,
     };
   },
 });
