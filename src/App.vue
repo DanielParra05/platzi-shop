@@ -21,6 +21,16 @@
       <p>Total: ${{ new Intl.NumberFormat("es-CO").format(total) }}</p>
     </div>
   </header>
+
+  <div class="field" id="searchform">
+    <input
+      type="text"
+      id="searchterm"
+      placeholder="what are you searching for?"
+      v-model="searchInput"
+    />
+  </div>
+
   <product-component
     v-for="product in products"
     :key="product.name"
@@ -31,77 +41,26 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, toRefs, watch, computed } from "vue";
+import {
+  defineComponent,
+  ref,
+  reactive,
+  toRefs,
+  watch,
+  computed,
+  onMounted,
+} from "vue";
 import ProductComponent from "@/components/ProductComponent.vue";
 import Product from "@/types/Product";
+import api from "@/api";
 
 export default defineComponent({
   components: { ProductComponent },
   setup() {
     const productSate = reactive({
-      products: [
-        {
-          name: "camara",
-          price: 450000,
-          stock: 5,
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
-          images: [
-            {
-              image: require("@/assets/images/camara.jpg"),
-              thumbnail: require("@/assets/images/camara-thumb.jpg"),
-            },
-            {
-              image: require("@/assets/images/camara-2.jpg"),
-              thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
-            },
-          ],
-          new: false,
-          offer: true,
-          quantity: 1,
-        },
-        {
-          name: "camaraPl2",
-          price: 36000,
-          stock: 3,
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
-          images: [
-            {
-              image: require("@/assets/images/camara.jpg"),
-              thumbnail: require("@/assets/images/camara-thumb.jpg"),
-            },
-            {
-              image: require("@/assets/images/camara-2.jpg"),
-              thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
-            },
-          ],
-          new: true,
-          offer: true,
-          quantity: 1,
-        },
-        {
-          name: "camaraPl3",
-          price: 150000,
-          stock: 5,
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt atqu",
-          images: [
-            {
-              image: require("@/assets/images/camara.jpg"),
-              thumbnail: require("@/assets/images/camara-thumb.jpg"),
-            },
-            {
-              image: require("@/assets/images/camara-2.jpg"),
-              thumbnail: require("@/assets/images/camara-2-thumb.jpg"),
-            },
-          ],
-          new: true,
-          offer: false,
-          quantity: 1,
-        },
-      ],
+      products: [],
     });
+
     const cartState = reactive({
       cartOpen: false,
       cart: new Array<any>(),
@@ -115,6 +74,13 @@ export default defineComponent({
         return total;
       }),
     });
+    onMounted(() => {
+      console.log("Mounted");
+    });
+
+    fetch("https://my-json-server.typicode.com/iosamuel/demo/products")
+      .then((res) => res.json())
+      .then((data) => (productSate.products = data));
 
     function addToCart(product: Product) {
       var proIndex = cartState.cart.findIndex(
@@ -138,14 +104,14 @@ export default defineComponent({
         discountCodes.value.splice(discountCodeIndex, 1);
       }
     }
-    /**     
+    /**
   watch(cartState.cart, () => {
     cartState.total = cartState.cart.reduce((prev, curr) => {
       const prevPrice = prev.price || prev;
         const prevQuantity = prev.quantity || 1;
         return prevPrice * prevQuantity + curr.price * curr.quantity;
       }, 0);
-    }); 
+    });
   */
 
     return {
