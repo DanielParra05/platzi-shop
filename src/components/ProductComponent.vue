@@ -32,7 +32,7 @@
       <p class="description__status" v-else-if="product.stock == 0">
         Out of stock
       </p>
-      <p class="description__price">
+      <p class="description__price" :style="{ color: price_color }">
         {{ new Intl.NumberFormat("es-CO").format(product.price) }}
       </p>
       <p class="description__content">
@@ -56,36 +56,47 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, ref } from "vue";
+import { defineComponent, reactive, toRefs, watch } from "vue";
 import BadgesComponent from "@/components/BadgesComponent.vue";
 
 export default defineComponent({
   name: "ProductComponent",
   components: { BadgesComponent },
-  props: { product: {} },
+  props: ["product"],
   emits: ["send-to-cart", "send-discount"],
   setup(props, { emit }) {
-    const productSate = reactive({
+    const productState = reactive({
       activeImage: 0,
+      price_color: "rgb(104,104,209)",
     });
 
-    
     function sendDiscount(event: Event) {
-    emit("send-discount", event, props.product);
+      emit("send-discount", event, props.product);
     }
     function sendToCart() {
       emit("send-to-cart", props.product);
     }
 
-    setTimeout(() => {
-      productSate.activeImage = 1;
-    }, 2000);
+    watch(
+      () => productState.activeImage,
+      (val: number, oldValue: number) => {
+        console.log(val, oldValue);
+      }
+    );
 
+    watch(
+      () => props.product.stock,
+      (stock) => {
+        if (stock <= 1) {
+          productState.price_color = "rgb(188, 30, 67)";
+        }
+      }
+    );
     return {
-      ...toRefs(productSate),
+      ...toRefs(productState),
 
       sendToCart,
-      sendDiscount
+      sendDiscount,
     };
   },
 });

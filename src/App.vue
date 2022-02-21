@@ -18,6 +18,7 @@
           ({{ carItem.quantity }})</span
         >
       </div>
+      <p>Total: ${{ new Intl.NumberFormat("es-CO").format(total) }}</p>
     </div>
   </header>
   <product-component
@@ -30,8 +31,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, toRefs } from "vue";
+import { defineComponent, ref, reactive, toRefs, watch } from "vue";
 import ProductComponent from "@/components/ProductComponent.vue";
+import Product from "@/types/Product";
 
 export default defineComponent({
   components: { ProductComponent },
@@ -103,9 +105,10 @@ export default defineComponent({
     const cartState = reactive({
       cartOpen: false,
       cart: new Array<any>(),
+      total: 0,
     });
 
-    function addToCart(product: any) {
+    function addToCart(product: Product) {
       var proIndex = cartState.cart.findIndex(
         (prod) => prod.name == product.name
       );
@@ -118,21 +121,29 @@ export default defineComponent({
     }
     const discountCodes = ref(["PLATZI20", "DANIEL"]);
 
-    function applyDiscount(event: Event, product: any){
-        var discountCodeIndex: number = discountCodes.value.indexOf(
+    function applyDiscount(event: Event, product: Product) {
+      var discountCodeIndex: number = discountCodes.value.indexOf(
         (event.target as HTMLInputElement).value
       );
       if (discountCodeIndex >= 0) {
-         product.price *= 50 / 100;
-         discountCodes.value.splice(discountCodeIndex, 1);
+        product.price *= 50 / 100;
+        discountCodes.value.splice(discountCodeIndex, 1);
       }
     }
+
+    watch(cartState.cart, () => {
+      cartState.total = cartState.cart.reduce((prev, curr) => {
+        const prevPrice = prev.price || prev;
+        const prevQuantity = prev.quantity || 1;
+        return prevPrice * prevQuantity + curr.price * curr.quantity;
+      }, 0);
+    });
 
     return {
       ...toRefs(cartState),
       ...toRefs(productSate),
       addToCart,
-      applyDiscount
+      applyDiscount,
     };
   },
 });
