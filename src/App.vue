@@ -50,15 +50,15 @@ import {
   computed,
   onMounted,
 } from "vue";
-import ProductComponent from "@/components/ProductComponent.vue";
-import Product from "@/types/Product";
+import ProductComponent from "./components/ProductComponent.vue";
+import Product from "./types/Product";
 import Axios from "axios";
 
 export default defineComponent({
   components: { ProductComponent },
   setup() {
     const productSate = reactive({
-      products: Array<Product>(),
+      products: new Array<Product>(),
       searchField: "",
     });
 
@@ -74,9 +74,6 @@ export default defineComponent({
 
         return total;
       }),
-    });
-    onMounted(() => {
-      console.log("Mounted");
     });
 
     Axios.get<Product[]>(
