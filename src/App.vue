@@ -52,12 +52,13 @@ import {
 } from "vue";
 import ProductComponent from "@/components/ProductComponent.vue";
 import Product from "@/types/Product";
+import Axios from "axios";
 
 export default defineComponent({
   components: { ProductComponent },
   setup() {
     const productSate = reactive({
-      products: [],
+      products: Array<Product>(),
       searchField: "",
     });
 
@@ -78,21 +79,21 @@ export default defineComponent({
       console.log("Mounted");
     });
 
-    fetch("https://my-json-server.typicode.com/iosamuel/demo/products")
-      .then((res) => res.json())
-      .then((data) => (productSate.products = data));
+    Axios.get<Product[]>(
+      "https://my-json-server.typicode.com/iosamuel/demo/products"
+    ).then((res) => (productSate.products = res.data));
 
     function search() {
-      fetch("https://my-json-server.typicode.com/iosamuel/demo/products")
-        .then((res) => res.json())
-        .then((data) => {
-          productSate.products = data.filter(
-            (result: { name: string }) =>
-              result.name.toLowerCase() ==
-                productSate.searchField.toLowerCase() ||
-              "" == productSate.searchField
-          );
-        });
+      Axios.get<Product[]>(
+        "https://my-json-server.typicode.com/iosamuel/demo/products"
+      ).then((resp) => {
+        productSate.products = resp.data.filter(
+          (result: { name: string }) =>
+            result.name.toLowerCase() ==
+              productSate.searchField.toLowerCase() ||
+            "" == productSate.searchField
+        );
+      });
     }
 
     function addToCart(product: Product) {
