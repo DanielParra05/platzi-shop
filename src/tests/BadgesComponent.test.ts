@@ -26,9 +26,6 @@ const wrapper = mount(BadgesComponent, {
         }
     }
 });
-/**
- * @vitest-environment jsdom
- */
 describe('tests for badges', () => {
     //Test deberia ser exitoso porque el producto esta en oferta. 
     test("is offer product", async () => {

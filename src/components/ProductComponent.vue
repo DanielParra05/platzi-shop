@@ -18,7 +18,9 @@
       </div>
     </section>
     <section class="description">
-      <h4>{{ product.name }}{{ product.stock == 0 ? "😒" : "😊" }}</h4>
+      <h4 id="stockEmoji">
+        {{ product.name }}{{ product.stock == 0 ? "😒" : "😊" }}
+      </h4>
       <badges-component :product="product"></badges-component>
       <p class="description__status" v-if="product.stock == 3">
         Quedan pocas unidades
@@ -49,11 +51,7 @@
           @keyup.enter="sendDiscount($event)"
         />
       </div>
-      <button
-        id="addCartButton"
-        :disabled="product.stock == 0"
-        @click="sendToCart"
-      >
+      <button id="addCartButton" :disabled="product.stock == 0" @click="sendToCart">
         Agregar al carrito
       </button>
     </section>
@@ -62,7 +60,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, watch, computed } from "vue";
-import BadgesComponent from "@/components/BadgesComponent.vue";
+import BadgesComponent from "./BadgesComponent.vue";
 
 export default defineComponent({
   name: "ProductComponent",
