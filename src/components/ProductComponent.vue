@@ -43,12 +43,17 @@
       <div class="discount">
         <span>Codigo de Descuent:</span>
         <input
+          id="discountCodeInput"
           type="text"
           placeholder="Ingresa tu codigo"
           @keyup.enter="sendDiscount($event)"
         />
       </div>
-      <button :disabled="product.stock == 0" @click="sendToCart">
+      <button
+        id="addCartButton"
+        :disabled="product.stock == 0"
+        @click="sendToCart"
+      >
         Agregar al carrito
       </button>
     </section>
